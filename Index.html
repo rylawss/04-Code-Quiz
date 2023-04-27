@@ -14,13 +14,15 @@
   <body class="m-4 p-2 bg-dark text-light">
     <button class="btn btn-primary" id="startQuiz">Start</button>
     <div id="container">
-      <span id="timer"></span>
-      <h2>Question: <span id="question"></span></h2>
+      <div style="display: flex; justify-content: space-between">
+        <h2>Question: <span id="question"></span></h2>
+        <span id="timer"></span>
+      </div>
 
       <span>Score: <span id="score"></span></span>
 
       <form method="get">
-        <fieldset class="bg-secondary rounded" id="questions"></fieldset>
+        <fieldset class="bg-secondary rounded p-2" id="questions"></fieldset>
         <input class="btn btn-info" id="submit" type="submit" value="Submit" />
       </form>
 
@@ -41,7 +43,7 @@
     </div>
 
     <div id="highScores">
-      <table>
+      <table class="table text-light">
         <thead>
           <tr>
             <td>Names</td>
@@ -50,6 +52,8 @@
         </thead>
         <tbody id="highScoreList"></tbody>
       </table>
+      <button class="btn btn-info" id="replay">Replay</button>
+      <button class="btn btn-danger" id="clear">Clear Score</button>
     </div>
 
     <script src="script.js"></script>

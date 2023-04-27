@@ -1,5 +1,9 @@
 const questions = [
-  { question: "What is 4 + 2", answer: 6, response: [3, 4, 5, 6] },
+  {
+    question: "What is 4 + 2",
+    answer: "test",
+    response: ["test", "tasdfa", "asdfasdf", "asdfasdf"],
+  },
   { question: "What is 3 + 2", answer: 5, response: [3, 4, 5, 6] },
 ];
 
@@ -12,18 +16,81 @@ const startQuizButton = document.getElementById("startQuiz");
 const quizOver = document.getElementById("quizOver");
 const finalScore = document.getElementById("finalScore");
 const indicator = document.getElementById("indicator");
+const quizTimer = document.getElementById("timer");
+const submitScore = document.getElementById("submitScore");
+const initials = document.getElementById("initials");
+const highScores = document.getElementById("highScores");
+const highScoreList = document.getElementById("highScoreList");
+const clearHighScoreButton = document.getElementById("clear");
+const replay = document.getElementById("replay");
 
-container.style.display = "none";
-quizOver.style.display = "none";
+const quizTime = 100;
 
+//starts quiz and timer on button press
+function startQuiz() {
+  currentQuestion = 0;
+  scoreValue = 0;
+  timeLeft = quizTime;
+
+  quizTimer.textContent = "Time left: " + timeLeft;
+  startQuizButton.style.display = "none";
+  container.style.display = "block";
+  highScores.style.display = "none";
+  generateQuestion(currentQuestion);
+
+  timerInterval = setInterval(function () {
+    timeLeft--;
+    quizTimer.textContent = "Time left: " + timeLeft;
+
+    if (timeLeft === 0) {
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz() {
+  clearInterval(timerInterval);
+  finalScore.innerHTML = scoreValue;
+  container.style.display = "none";
+  quizOver.style.display = "block";
+}
+
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
+
+//generates the questions of the quiz through the array declared above
 function generateQuestion(i) {
   questionHeading.innerHTML = questions[i].question;
   questionContainer.innerHTML = "";
   score.innerHTML = scoreValue;
 
-  questions[i].response.forEach((response) => {
+  const randomizedResponses = shuffle(questions[i].response);
+
+  randomizedResponses.forEach((response) => {
+    const inputWrapper = document.createElement("div");
+    inputWrapper.classList.add("form-check");
     const label = document.createElement("label");
+    label.classList.add("form-check-label");
     const input = document.createElement("input");
+    input.classList.add("form-check-input");
+
     const node = document.createTextNode(response);
 
     label.innerHtml += response;
@@ -34,19 +101,19 @@ function generateQuestion(i) {
     label.appendChild(input);
     label.appendChild(node);
 
-    questionContainer.appendChild(label);
+    inputWrapper.appendChild(label);
+
+    questionContainer.appendChild(inputWrapper);
   });
 }
-
+//indicates if the question was answered correctly or not
 function setIndicator(string) {
   indicator.innerHTML = string;
 
   setTimeout(() => (indicator.innerHTML = ""), 1500);
 }
 
-var currentQuestion = 0;
-var scoreValue = 0;
-
+//checks if the answer submitted is correct
 function checkAnswer(event) {
   event.preventDefault();
 
@@ -54,51 +121,23 @@ function checkAnswer(event) {
 
   if (response == questions[currentQuestion].answer) {
     scoreValue++;
-    currentQuestion++;
+
     setIndicator("Correct");
   } else {
-    currentQuestion++;
     timeLeft -= 10;
     setIndicator("Wrong!");
   }
 
-  if (currentQuestion >= questions.length) {
-    finalScore.innerHTML = scoreValue;
-    container.style.display = "none";
-    quizOver.style.display = "block";
+  currentQuestion++;
+
+  if (currentQuestion >= questions.length || timeLeft <= 0) {
+    endQuiz();
   } else {
     generateQuestion(currentQuestion);
   }
 }
 
-const quizTimer = document.getElementById("timer");
-var timeLeft = 60;
-
-submit.addEventListener("click", checkAnswer);
-
-function startQuiz() {
-  startQuizButton.style.display = "none";
-  generateQuestion(currentQuestion);
-
-  //Timer
-  timerInterval = setInterval(function () {
-    timeLeft--;
-    quizTimer.textContent = "Time left: " + timeLeft;
-
-    if (timeLeft === 0) {
-      clearInterval(timerInterval);
-      showScore();
-    }
-  }, 1000);
-  container.style.display = "block";
-}
-
-startQuizButton.addEventListener("click", startQuiz);
-
-submitScore = document.getElementById("submitScore");
-initials = document.getElementById("initials");
-
-submitScore.addEventListener("click", function highscore() {
+function highscore() {
   if (initials.value === "") {
     alert("Initials cannot be blank");
     return false;
@@ -112,39 +151,61 @@ submitScore.addEventListener("click", function highscore() {
     };
 
     quizOver.style.display = "none";
-    // highscoreContainer.style.display = "flex";
-    // highscoreDiv.style.display = "block";
-    // endGameBtns.style.display = "flex";
+    highScores.style.display = "block";
 
     savedHighscores.push(currentHighscore);
     localStorage.setItem("savedHighscores", JSON.stringify(savedHighscores));
     generateHighscores();
   }
-});
-
-const highScores = document.getElementById("highScores");
-const highScoreList = document.getElementById("highScoreList");
+}
 
 function generateHighscores() {
   highScoreList.innerHTML = "";
   var highscores = JSON.parse(localStorage.getItem("savedHighscores")) || [];
 
-  for (i = 0; i < highscores.length; i++) {
+  for (i = 0; i < highscores.length && i <= 4; i++) {
     var newNameSpan = document.createElement("td");
     var newScoreSpan = document.createElement("td");
     newNameSpan.textContent = highscores[i].name;
     newScoreSpan.textContent = highscores[i].score;
-
-    // lemme finish this rq
-    // we  just need to wrap the two columns in a table row
 
     var newScoreRow = document.createElement("tr");
     newScoreRow.appendChild(newNameSpan);
     newScoreRow.appendChild(newScoreSpan);
 
     highScoreList.appendChild(newScoreRow);
-
-    // run it of fuck on sec run it yuuhhhhhhhhhhhhhhh
-    // now we use bootstrap
   }
 }
+
+function clearHighScore() {
+  localStorage.clear();
+  highScoreList.innerHTML = "";
+}
+
+function retryQuiz() {
+  highScores.style.display = "none";
+  startQuizButton.style.display = "block";
+}
+
+function addListeners() {
+  replay.addEventListener("click", retryQuiz);
+  clearHighScoreButton.addEventListener("click", clearHighScore);
+  startQuizButton.addEventListener("click", startQuiz);
+  submitScore.addEventListener("click", highscore);
+  submit.addEventListener("click", checkAnswer);
+}
+
+function init() {
+  // Hide All Sections besides Start button
+  container.style.display = "none";
+  quizOver.style.display = "none";
+  highScores.style.display = "none";
+
+  var currentQuestion = 0;
+  var scoreValue = 0;
+  var timeLeft = quizTime;
+
+  addListeners();
+}
+
+init();
