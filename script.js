@@ -1,10 +1,44 @@
 const questions = [
   {
-    question: "What is 4 + 2",
-    answer: "test",
-    response: ["test", "tasdfa", "asdfasdf", "asdfasdf"],
+    question: "Inside which HTML element do we put the JavaScript?",
+    answer: "<script>",
+    response: ["<script>", "<js>", "<javascript>", "<scripting>"],
   },
-  { question: "What is 3 + 2", answer: 5, response: [3, 4, 5, 6] },
+  {
+    question: 'What is the correct JavaScript syntax to write "Hello World"?',
+    answer: 'document.write("Hello World")',
+    response: [
+      'document.write("Hello World")',
+      'response.write("Hello World")',
+      '"Hello World"',
+      '("Hello World")',
+    ],
+  },
+  {
+    question: "Where is the correct place to insert a JavaScript?",
+    answer: "Both the <head> section and the <body> section are correct",
+    response: [
+      "Both the <head> section and the <body> section are correct",
+      "The <body> section",
+      "The <head> section",
+    ],
+  },
+  {
+    question:
+      'What is the correct syntax for referring to an external script called "xxx.js"?',
+    answer: '<script src="xxx.js">',
+    response: [
+      '<script src="xxx.js">',
+      '<script name="xxx.js">',
+      '<script href="xxx.js">',
+      '<script value="xxx.js">',
+    ],
+  },
+  {
+    question: "An external JavaScript must contain the <script> tag",
+    answer: "False",
+    response: ["True", "False"],
+  },
 ];
 
 const questionHeading = document.getElementById("question");
@@ -82,7 +116,7 @@ function generateQuestion(i) {
   score.innerHTML = scoreValue;
 
   const randomizedResponses = shuffle(questions[i].response);
-
+  //ramdomizes responces
   randomizedResponses.forEach((response) => {
     const inputWrapper = document.createElement("div");
     inputWrapper.classList.add("form-check");
