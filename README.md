@@ -12,9 +12,10 @@ css
 Utilized JavaScript generate a timed quiz with the answer choices randomized and penelizes the user foor incorrect choices by subtracting time.  
  
 ## SITE LINK
-(https://rylawss.github.io/04-Code-Quiz/)
+https://rylawss.github.io/04-Code-Quiz/
 
-![03-password](https://user-images.githubusercontent.com/128633609/233496864-d5729507-9471-4dc7-9c21-1ed32f8c1aff.PNG)
+![04](https://user-images.githubusercontent.com/128633609/235045488-42b61f82-cb08-4e95-a932-b4259722c969.PNG)
+
 
 
 
